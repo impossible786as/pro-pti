@@ -6,7 +6,6 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +13,6 @@ import com.real.earn.paypal.databinding.ActivityPermissionBinding
 import com.real.earn.paypal.service.AutomationService
 import com.real.earn.paypal.utils.AppPrefs
 import com.real.earn.paypal.utils.PermissionHelper
-import com.real.earn.paypal.utils.ShizukuShell
 
 class PermissionActivity : AppCompatActivity() {
 
@@ -77,8 +75,8 @@ class PermissionActivity : AppCompatActivity() {
         binding.btnChooseSound.setOnClickListener { openRingtonePicker() }
         updateSoundLabel()
 
-        // 🟢 Shizuku toggle — safe lookup (XML may or may not have it yet)
-        setupShizukuToggle()
+        // 🟢 Shizuku UI مکمل چھپا دیں — ورچوئل میں اس کا کوئی کام نہیں
+        hideShizukuSection()
 
         binding.btnStart.setOnClickListener {
             if (!allGranted()) {
@@ -89,72 +87,16 @@ class PermissionActivity : AppCompatActivity() {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════
-    // 🟢 Shizuku Toggle — null-safe binding (works with or without XML)
-    // ══════════════════════════════════════════════════════════════════
-    private fun setupShizukuToggle() {
-        val shizukuId = resources.getIdentifier("switchShizukuMode", "id", packageName)
-        if (shizukuId == 0) return
-
-        val shizukuSwitch = findViewById<View>(shizukuId)
-        if (shizukuSwitch is CompoundButton) {
-            shizukuSwitch.isChecked = prefs.shizukuModeEnabled
-            shizukuSwitch.setOnCheckedChangeListener { _, checked ->
-                prefs.shizukuModeEnabled = checked
-                if (checked) {
-                    when {
-                        !ShizukuShell.isAvailable() -> {
-                            Toast.makeText(
-                                this,
-                                "Shizuku install karo (Play Store → Shizuku)",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            shizukuSwitch.isChecked = false
-                            prefs.shizukuModeEnabled = false
-                        }
-                        !ShizukuShell.hasPermission() -> {
-                            ShizukuShell.requestPermission()
-                            Toast.makeText(
-                                this,
-                                "Shizuku me permission allow karo",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                        else -> {
-                            Toast.makeText(this, "Shizuku ready ✓", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-                updateShizukuStatus()
-            }
-        }
-
-        updateShizukuStatus()
-    }
-
-    private fun updateShizukuStatus() {
-        val statusId = resources.getIdentifier("tvShizukuStatus", "id", packageName)
-        if (statusId == 0) return
-        val tv = findViewById<TextView>(statusId) ?: return
-
-        when {
-            !prefs.shizukuModeEnabled -> {
-                tv.text = "Disabled"
-                tv.setTextColor(getColor(R.color.text_dim))
-            }
-            !ShizukuShell.isAvailable() -> {
-                tv.text = "✘ Shizuku not installed"
-                tv.setTextColor(getColor(R.color.error_red))
-            }
-            !ShizukuShell.hasPermission() -> {
-                tv.text = "⚠ Permission needed — tap toggle to grant"
-                tv.setTextColor(getColor(R.color.warning_amber))
-            }
-            else -> {
-                tv.text = "✔ Connected — ADB ready"
-                tv.setTextColor(getColor(R.color.success_green))
-            }
-        }
+    private fun hideShizukuSection() {
+        try {
+            val switch = findViewById<View>(R.id.switchShizukuMode)
+            val status = findViewById<View>(R.id.tvShizukuStatus)
+            switch?.visibility = View.GONE
+            status?.visibility = View.GONE
+            // پورا Shizuku کارڈ چھپا دیں
+            val card = (switch?.parent as? View)?.parent as? View
+            card?.visibility = View.GONE
+        } catch (_: Exception) {}
     }
 
     private fun startAutomation() {
@@ -186,7 +128,6 @@ class PermissionActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshUi()
-        updateShizukuStatus()
     }
 
     private fun refreshUi() {
