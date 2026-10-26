@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dashboard"
+                    android:textColor="@color/vip_gold_light"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Real Earn · PayPal"
+                    android:textColor="@color/text_dim"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.15" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnRefresh"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_vip_card"
+                android:padding="10dp"
+                android:src="@android:drawable/ic_popup_sync"
+                app:tint="@color/vip_emerald_light"
+                android:contentDescription="Refresh" />
+
+            <ImageButton
+                android:id="@+id/btnLogout"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_vip_card"
+                android:padding="10dp"
+                android:src="@android:drawable/ic_lock_power_off"
+                app:tint="@color/error_red"
+                android:contentDescription="Logout" />
+        </LinearLayout>
+
+        <!-- Balance Card -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_marginTop="8dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_vip_shizuku_card" />
+
+            <com.real.earn.paypal.utils.WaterWaveView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AVAILABLE BALANCE"
+                    android:textColor="@color/text_light"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.15" />
+
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Real User"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <!-- 🟢 Spacer to push balance down -->
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00 PKR"
+                    android:textColor="@color/white"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="-0.02" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Stats -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_vip_card"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:layout_marginEnd="4dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvTodayOtps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TODAY"
+                    android:textColor="@color/vip_gold"
+                    android:textSize="9sp"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_vip_card"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:layout_marginHorizontal="4dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvTotalOtps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TOTAL"
+                    android:textColor="@color/vip_gold"
+                    android:textSize="9sp"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_vip_card"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:layout_marginStart="4dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvTotalEarned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00"
+                    android:textColor="@color/vip_emerald_light"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="EARNED"
+                    android:textColor="@color/vip_gold"
+                    android:textSize="9sp"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Hidden virtual button (for binding only) -->
+        <Button
+            android:id="@+id/btnVirtualProfile"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+
+        <!-- Start button -->
+        <Button
+            android:id="@+id/btnStartAutomation"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_vip_button_primary"
+            android:text="START AUTOMATION"
+            android:textColor="@color/bg_dark"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
