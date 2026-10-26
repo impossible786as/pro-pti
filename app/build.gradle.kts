@@ -8,10 +8,9 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        // 🟢 نیا package name — purana version alag chalega
         applicationId = "com.realearn.paypalpro"
-        minSdk = 26
-        targetSdk = 34
+        minSdk = 28          // 🟢 Android 9 (API 28) minimum
+        targetSdk = 33       // 🟢 specialUse crash سے بچنے کے لیے 33
         versionCode = 2
         versionName = "2.0.0"
 
@@ -92,7 +91,5 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // 🟢 Shizuku — ADB pairing ki jagah
-    implementation("dev.rikka.shizuku:api:13.1.5")
-    implementation("dev.rikka.shizuku:provider:13.1.5")
+    // 🟢 Shizuku مکمل ختم — کوئی dependency نہیں
 }
