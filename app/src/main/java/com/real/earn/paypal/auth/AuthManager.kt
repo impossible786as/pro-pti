@@ -2,25 +2,32 @@ package com.real.earn.paypal.auth
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
 class AuthManager(context: Context) {
 
-    private val prefs: SharedPreferences
+    private val prefs: SharedPreferences = createPrefs(context)
 
-    init {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
+    private fun createPrefs(ctx: Context): SharedPreferences {
+        return try {
+            val masterKey = MasterKey.Builder(ctx)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
 
-        prefs = EncryptedSharedPreferences.create(
-            context,
-            PREFS_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+            EncryptedSharedPreferences.create(
+                ctx,
+                PREFS_NAME,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            // 🟢 ورچوئل / exotic device: Keystore fail → plain prefs fallback
+            Log.w("AuthManager", "EncryptedSharedPreferences failed → fallback", e)
+            ctx.getSharedPreferences(PREFS_NAME_FALLBACK, Context.MODE_PRIVATE)
+        }
     }
 
     fun saveToken(token: String) {
@@ -41,21 +48,18 @@ class AuthManager(context: Context) {
 
     fun getUserName(): String = prefs.getString(KEY_USERNAME, "") ?: ""
 
-    // 🟢 Client board bot_id (0 = main board)
     fun saveClientId(clientId: Long) {
         prefs.edit().putLong(KEY_CLIENT_ID, clientId).apply()
     }
 
     fun getClientId(): Long = prefs.getLong(KEY_CLIENT_ID, 0L)
 
-    // 🟢 Owner ID (client mode mein login ke liye — resend ke waqt zaroori)
     fun saveOwnerId(ownerId: Long) {
         prefs.edit().putLong(KEY_OWNER_ID, ownerId).apply()
     }
 
     fun getOwnerId(): Long = prefs.getLong(KEY_OWNER_ID, 0L)
 
-    // 🟢 Login identifier (resend ke liye — username ya user_id)
     fun saveIdentifier(identifier: String) {
         prefs.edit().putString(KEY_IDENTIFIER, identifier).apply()
     }
@@ -72,11 +76,12 @@ class AuthManager(context: Context) {
 
     companion object {
         private const val PREFS_NAME = "real_earn_secure_prefs"
+        private const val PREFS_NAME_FALLBACK = "real_earn_secure_prefs_fallback"
         private const val KEY_TOKEN = "auth_token"
         private const val KEY_USER_ID = "user_id"
         private const val KEY_USERNAME = "user_name"
-        private const val KEY_CLIENT_ID = "client_id"   // 🟢 NEW
-        private const val KEY_OWNER_ID = "owner_id"     // 🟢 NEW
-        private const val KEY_IDENTIFIER = "identifier" // 🟢 NEW
+        private const val KEY_CLIENT_ID = "client_id"
+        private const val KEY_OWNER_ID = "owner_id"
+        private const val KEY_IDENTIFIER = "identifier"
     }
 }
