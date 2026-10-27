@@ -4,23 +4,30 @@ import com.real.earn.paypal.service.AutomationState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.DataOutputStream
+import java.util.concurrent.TimeUnit
 
 /**
  * 🟢 Root Shell — Executes commands with superuser (su) privileges.
- * Bypasses Shizuku entirely.
  */
 object RootShell {
 
     /**
-     * Check if root is available.
+     * 🟢 Check if root is available (with 1.5s timeout to avoid hangs in virtual).
      */
     fun isRootAvailable(): Boolean {
+        var process: Process? = null
         return try {
-            val process = Runtime.getRuntime().exec("su -c id")
-            process.waitFor()
-            process.exitValue() == 0
-        } catch (e: Exception) {
+            process = Runtime.getRuntime().exec("su -c id")
+            val finished = process.waitFor(1500, TimeUnit.MILLISECONDS)
+            if (!finished) {
+                false
+            } else {
+                process.exitValue() == 0
+            }
+        } catch (_: Exception) {
             false
+        } finally {
+            try { process?.destroy() } catch (_: Exception) {}
         }
     }
 
