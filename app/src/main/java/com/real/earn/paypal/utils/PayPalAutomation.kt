@@ -22,11 +22,17 @@ object PayPalAutomation {
         var fail = 0
         if (numbers.isEmpty()) return Pair(0, 0)
 
+        // 🟢 Flight/spoofing اب کبھی بیچ نہیں روکتا
+        //    - روٹ ہو → سپوفنگ ہوگی
+        //    - روٹ نہ ہو → سکپ ہوگی
+        //    - فیل ہو → پھر بھی آگے بڑھیں گے
         if (autoFlightMode) {
-            val ok = StepUtils.retryStep("Flight cycle") { AirplaneModeController.strictToggle(service) }
-            if (!ok) return Pair(0, numbers.size)
+            StepUtils.retryStep("Flight cycle") {
+                AirplaneModeController.strictToggle(service)
+            }
         }
 
+        // 🟢 Clear Data (روٹ ہو → pm clear، نہ ہو → accessibility)
         val clearOk = StepUtils.retryStep("Clear data") {
             PayPalClearData.strictClear(service, "com.paypal.android.p2pmobile")
         }
